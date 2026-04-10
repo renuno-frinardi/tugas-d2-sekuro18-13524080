@@ -1,0 +1,5 @@
+.vscode
+src/destroyer/build
+src/destroyer/include
+src/destroyer/install
+src/destroyer/log
