@@ -26,3 +26,6 @@ Agar dapat menjalankan program, sistem harus sudah memasang Ubuntu LTS 22 (WSL/N
 - Renuno Yuqa Frinardi
 - NIM 13524080
 - Prodi Teknik Informatika
+
+## Lampiran
+- Link Video Youtube (Bonus): https://youtu.be/2sH58Q3F4m4
