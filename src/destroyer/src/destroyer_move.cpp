@@ -17,9 +17,9 @@ class DestroyerMove : public rclcpp::Node
    private:
       static std::string motionTranslator(const geometry_msgs::msg::Twist &message) {
          std::string msg;
-         message.linear.x > 0.0 ? msg + "Maju" : msg + "Mundur";
-         message.linear.y > 0.0 ? msg + "Geser Kiri" : msg + "Geser Kanan";
-         message.angular.z > 0.0 ? msg + "Berputar Kiri" : msg + "Berputar Kanan";
+         message.linear.x > 0.0 ? msg += "Maju" : msg += "Mundur";
+         message.linear.y > 0.0 ? msg += "Geser Kiri" : msg += "Geser Kanan";
+         message.angular.z > 0.0 ? msg += "Berputar Kiri" : msg += "Berputar Kanan";
          return msg;
       }
 
