@@ -3,6 +3,7 @@
 #include <std_msgs/msg/string.hpp>
 #include <string>
 #include <cmath>
+#include <array>
 
 using std::placeholders::_1;
 
@@ -15,16 +16,51 @@ class DestroyerMove : public rclcpp::Node
       }
 
    private:
+      struct OmniWheelCommand {
+         double fl;
+         double fr;
+         double bl;
+         double br;
+      };
+
       static std::string motionTranslator(const geometry_msgs::msg::Twist &message) {
          std::string msg;
-         message.linear.x > 0.0 ? msg += "Maju " : msg += "Mundur ";
-         message.linear.y > 0.0 ? msg += "Geser Kiri " : msg += "Geser Kanan ";
-         message.angular.z > 0.0 ? msg += "Berputar Kiri" : msg += "Berputar Kanan";
+         if (message.linear.x != 0.0) message.linear.x > 0.0 ? msg += "Maju " : msg += "Mundur ";
+         if (message.linear.y != 0.0) message.linear.y > 0.0 ? msg += "Geser Kiri " : msg += "Geser Kanan ";
+         if (message.angular.z != 0.0) message.angular.z > 0.0 ? msg += "Berputar Kiri" : msg += "Berputar Kanan";
+         if (message.linear.x == 0.0 && message.linear.y == 0.0 && message.angular.z == 0.0) msg = "Diam";
          return msg;
       }
 
+      static OmniWheelCommand omniCalc(const geometry_msgs::msg::Twist &message) {
+         const double vx = message.linear.x;
+         const double vy = message.linear.y;
+         const double wz = message.angular.z;
+
+        return OmniWheelCommand {
+            vx + vy + wz,  // FL
+            vx - vy - wz,  // FR
+            vx - vy + wz,  // BL
+            vx + vy - wz   // BR
+        };
+      }
+
+      static std::string wheelDirection(double value) {
+         if (value == 0.0) return "Diam";
+         return value > 0.0 ? "Maju" : "Mundur";
+      }
+
       void powerLogger(const geometry_msgs::msg::Twist::SharedPtr message) {
+         const OmniWheelCommand wheel_command = omniCalc(*message);
+
          RCLCPP_INFO(this->get_logger(), "Orientasi Gerak: %s", motionTranslator(*message).c_str());
+         RCLCPP_INFO(
+            this->get_logger(),
+            "Kombinasi Omni Wheels: FL=%s (%.2f), FR=%s (%.2f), BL=%s (%.2f), BR=%s (%.2f)",
+            wheelDirection(wheel_command.fl).c_str(), wheel_command.fl,
+            wheelDirection(wheel_command.fr).c_str(), wheel_command.fr,
+            wheelDirection(wheel_command.bl).c_str(), wheel_command.bl,
+            wheelDirection(wheel_command.br).c_str(), wheel_command.br);
       }
 
       void typeLogger(const std_msgs::msg::String::SharedPtr message) {
