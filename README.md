@@ -1,5 +1,7 @@
 # Tugas Day 2 SEKURO 18
 
+![Graph](docs/graph.png)
+
 ## Deskripsi Singkat
 
 Sebuah implementasi dari desain sederhana robot dengan nama "Destroyer II". Program ditulis menggunakan framework ROS 2 dengan bahasa C++ yang didevelop pada Ubuntu LTS 22. Di sini robot disusun dari 2 buah node Publisher, 1 node Publisher-Subscriber, dan 1 node Subscriber. Robot memiliki fitur untuk bergerak dengan dikendalikan melalui input ataupun secara random
